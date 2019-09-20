@@ -6,7 +6,7 @@ __author__ = "Dan McAteer"
 
 def read_input(text_file):
 
-    input_file = open(text_file, 'r')
+    input_file = open(text_file)
     lines = input_file.readlines()
 
     return lines
@@ -17,6 +17,21 @@ def get_grid_size(input_arr):
     x_coord, y_coord = map(int, line_1.split(" "))
 
     return x_coord, y_coord
+
+def get_grid_perim(input_arr):
+
+    grid_size = get_grid_size(input_arr)
+    perim = []
+
+    for index in range(0, grid_size[0]):
+        x_perim_lower = (index, 0)
+        x_perim_upper = (index, grid_size[1])
+        y_perim_left = (0, index)
+        y_perim_right = (grid_size[0], index)
+
+        perim += [x_perim_lower, x_perim_upper, y_perim_left, y_perim_right]
+
+    return perim
 
 def get_start_pos(input_arr):
 
@@ -59,6 +74,7 @@ def pacman(input_file):
     """
     input_arr = read_input(input_file)
     grid_size = get_grid_size(input_arr)
+    grid_perim = get_grid_perim(input_arr)
     start_pos = get_start_pos(input_arr)
     walls = get_walls(input_arr)
     moves = input_arr[2].strip()
@@ -66,20 +82,19 @@ def pacman(input_file):
     x_moves = ["E", "W"]
     y_moves = ["N", "S"]
 
-    print(moves)
-
     for move in moves:
+        #print(start_pos)
         move_value = get_move_value(move)
 
         if move in x_moves:
             start_pos = (start_pos[0] + move_value), start_pos[1]
-            if start_pos in walls:
+            if start_pos in walls or start_pos in grid_perim:
                 start_pos = (start_pos[0] - move_value), start_pos[1]
             else:
                 coins_collected += 1
         else:
             start_pos = start_pos[0], (start_pos[1] + move_value)
-            if start_pos in walls:
+            if start_pos in walls or start_pos in grid_perim:
                 start_pos = start_pos[0], (start_pos[1] - move_value)
             else:
                 coins_collected += 1
@@ -88,7 +103,4 @@ def pacman(input_file):
     final_pos_y = start_pos[1]
     return final_pos_x, final_pos_y, coins_collected
 
-print(pacman(file_path))
-
-
-
+print(pacman("test_files/py_test/generic.txt"))
