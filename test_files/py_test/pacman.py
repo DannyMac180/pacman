@@ -81,6 +81,7 @@ def pacman(input_file):
     coins_collected = 0
     x_moves = ["E", "W"]
     y_moves = ["N", "S"]
+    traversed_points = []
 
     for move in moves:
         #print(start_pos)
@@ -90,14 +91,20 @@ def pacman(input_file):
             start_pos = (start_pos[0] + move_value), start_pos[1]
             if start_pos in walls or start_pos in grid_perim:
                 start_pos = (start_pos[0] - move_value), start_pos[1]
+            elif start_pos in traversed_points:
+                break
             else:
                 coins_collected += 1
         else:
             start_pos = start_pos[0], (start_pos[1] + move_value)
             if start_pos in walls or start_pos in grid_perim:
                 start_pos = start_pos[0], (start_pos[1] - move_value)
+            elif start_pos in traversed_points:
+                break
             else:
                 coins_collected += 1
+
+            traversed_points.append(start_pos)
 
     final_pos_x = start_pos[0]
     final_pos_y = start_pos[1]
