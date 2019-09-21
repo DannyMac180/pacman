@@ -73,15 +73,13 @@ def pacman(input_file):
         3. coins_collected (int) = the number of coins that have been collected by Pacman across all movements
     """
     input_arr = read_input(input_file)
-    grid_size = get_grid_size(input_arr)
     grid_perim = get_grid_perim(input_arr)
     start_pos = get_start_pos(input_arr)
     walls = get_walls(input_arr)
     moves = input_arr[2].strip()
     coins_collected = 0
     x_moves = ["E", "W"]
-    y_moves = ["N", "S"]
-    traversed_points = []
+    traversed_points = [start_pos]
 
     for move in moves:
         #print(start_pos)
@@ -92,7 +90,7 @@ def pacman(input_file):
             if start_pos in walls or start_pos in grid_perim:
                 start_pos = (start_pos[0] - move_value), start_pos[1]
             elif start_pos in traversed_points:
-                break
+                continue
             else:
                 coins_collected += 1
         else:
@@ -100,14 +98,14 @@ def pacman(input_file):
             if start_pos in walls or start_pos in grid_perim:
                 start_pos = start_pos[0], (start_pos[1] - move_value)
             elif start_pos in traversed_points:
-                break
+                continue
             else:
                 coins_collected += 1
 
-            traversed_points.append(start_pos)
+        traversed_points.append(start_pos)
 
     final_pos_x = start_pos[0]
     final_pos_y = start_pos[1]
     return final_pos_x, final_pos_y, coins_collected
 
-print(pacman("test_files/py_test/generic.txt"))
+print(pacman("test_files/py_test/runtime.txt"))

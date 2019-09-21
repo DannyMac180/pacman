@@ -11,13 +11,13 @@ from pacman import pacman
 
 class AllTests(unittest.TestCase):
     def test_generic(self):
-        self.assertEqual(pacman("generic.txt"), (6, 1, 27))
+        self.assertEqual(pacman("test_files/py_test/generic.txt"), (6, 1, 27))
 
     def test_edge(self):
-        self.assertEqual(pacman("edge.txt"), (-1, -1, 0))
+        self.assertEqual(pacman("test_files/py_test/edge.txt"), (-1, -1, 0))
 
     def test_runtime(self):
-        self.assertEqual(pacman("runtime.txt"), (2142, 147, 148))
+        self.assertEqual(pacman("test_files/py_test/runtime.txt"), (2142, 147, 148))
 
 if __name__ == '__main__':
     for testClass in [AllTests]:
