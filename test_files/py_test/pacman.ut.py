@@ -16,6 +16,12 @@ class AllTests(unittest.TestCase):
     def test_edge(self):
         self.assertEqual(pacman("test_files/py_test/edge.txt"), (-1, -1, 0))
 
+    def test_edge_2(self):
+        self.assertEqual(pacman("test_files/py_test/edge_2.txt"), (-1, -1, 0))
+
+    def test_edge_3(self):
+        self.assertEqual(pacman("test_files/py_test/edge_3.txt"), (-1, -1, 0))
+
     def test_runtime(self):
         self.assertEqual(pacman("test_files/py_test/runtime.txt"), (2142, 147, 148))
 

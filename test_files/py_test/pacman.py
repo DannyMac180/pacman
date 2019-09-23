@@ -59,7 +59,37 @@ def get_move_value(direction):
 
     return direction_dict[direction]
 
+def make_move(move, pos):
+    x_moves = ["E", "W"]
+    
+    if move in x_moves:
+       pos = (pos[0] + get_move_value(move)), pos[1]
+    else:
+       pos = pos[0], (pos[1] + get_move_value(move))
+    
+    return pos
 
+def stop_move(move, pos):
+    x_moves = ["E", "W"]
+
+    if move in x_moves:
+        pos = (pos[0] - get_move_value(move)), pos[1]
+    else:
+        pos = pos[0], (pos[1] - get_move_value(move))
+
+    return pos
+
+def is_edge_case(start_pos, grid_size, walls, moves):
+
+    if start_pos > grid_size:
+        return True
+    elif start_pos in walls:
+        return True
+    elif not all(elem in ['N', 'S', 'E', 'W'] for elem in moves):
+        return True
+    else:
+        return False
+    
 def pacman(input_file):
     """ Use this function to format your input/output arguments. Be sure not to change the order of the output arguments. 
     Remember that code organization is very important to us, so we encourage the use of helper fuctions and classes as you see fit.
@@ -73,39 +103,30 @@ def pacman(input_file):
         3. coins_collected (int) = the number of coins that have been collected by Pacman across all movements
     """
     input_arr = read_input(input_file)
+    grid_size = get_grid_size(input_arr)
     grid_perim = get_grid_perim(input_arr)
     start_pos = get_start_pos(input_arr)
     walls = get_walls(input_arr)
     moves = input_arr[2].strip()
     coins_collected = 0
-    x_moves = ["E", "W"]
     traversed_points = [start_pos]
 
-    for move in moves:
-        #print(start_pos)
-        move_value = get_move_value(move)
+    if is_edge_case(start_pos, grid_size, walls, moves):
+        return (-1, -1, 0)
 
-        if move in x_moves:
-            start_pos = (start_pos[0] + move_value), start_pos[1]
-            if start_pos in walls or start_pos in grid_perim:
-                start_pos = (start_pos[0] - move_value), start_pos[1]
-            elif start_pos in traversed_points:
-                continue
-            else:
-                coins_collected += 1
+    for move in moves:
+
+        start_pos = make_move(move, start_pos)
+
+        if start_pos in walls or start_pos in grid_perim:
+            start_pos = stop_move(move, start_pos)
+        elif start_pos in traversed_points:
+            continue
         else:
-            start_pos = start_pos[0], (start_pos[1] + move_value)
-            if start_pos in walls or start_pos in grid_perim:
-                start_pos = start_pos[0], (start_pos[1] - move_value)
-            elif start_pos in traversed_points:
-                continue
-            else:
-                coins_collected += 1
+            coins_collected += 1
 
         traversed_points.append(start_pos)
 
     final_pos_x = start_pos[0]
     final_pos_y = start_pos[1]
     return final_pos_x, final_pos_y, coins_collected
-
-print(pacman("test_files/py_test/runtime.txt"))
